@@ -19,8 +19,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'fullname',
+        'username',
         'email',
         'password',
+        'nip_lama',
+        'nip_baru',
+        'satker_kd',
+        'jabatan',
+        'roles_json',
+        'is_active',
     ];
 
     /**
@@ -43,6 +51,18 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'roles_json' => 'array',
+            'is_active' => 'boolean',
         ];
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
     }
 }
