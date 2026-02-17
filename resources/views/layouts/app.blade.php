@@ -154,7 +154,7 @@
             color: var(--text-muted);
         }
 
-        input, select, textarea {
+        input, select, textarea, .input {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid var(--border);
@@ -162,9 +162,11 @@
             font-family: inherit;
             font-size: 1rem;
             transition: border-color 0.2s;
+            background: var(--bg-card);
+            color: var(--text);
         }
 
-        input:focus {
+        input:focus, select:focus, textarea:focus, .input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
@@ -185,6 +187,212 @@
 
         .animate-fade {
             animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Tablet & Mobile */
+        @media (max-width: 768px) {
+            /* Container */
+            .container {
+                padding: 1rem;
+            }
+
+            /* Navbar */
+            .navbar {
+                padding: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            /* Mobile Menu Toggle */
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            /* Navigation Links */
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 0;
+                margin-top: 1rem;
+                background: white;
+                border-radius: var(--radius-sm);
+                padding: 0.5rem 0;
+                box-shadow: var(--shadow);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-link {
+                padding: 0.75rem 1rem;
+                width: 100%;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-link:last-child {
+                border-bottom: none;
+            }
+
+            /* Buttons */
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.95rem;
+                width: 100%;
+                text-align: center;
+            }
+
+            /* Cards */
+            .card {
+                padding: 1rem;
+            }
+
+            /* Grid Layouts */
+            .grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            /* Stats Cards - 2 columns on mobile */
+            .grid[style*="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            /* Forms */
+            input, select, textarea {
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+
+            /* Tables */
+            table {
+                font-size: 0.85rem;
+            }
+
+            thead th {
+                padding: 0.5rem 0.25rem;
+                font-size: 0.8rem;
+            }
+
+            tbody td {
+                padding: 0.5rem 0.25rem;
+                font-size: 0.85rem;
+            }
+
+            /* Quick Actions */
+            .quick-actions {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* QR Code Display */
+            #qrcode {
+                width: 250px !important;
+                height: 250px !important;
+            }
+
+            /* Modal */
+            .modal-content {
+                width: 95% !important;
+                margin: 1rem !important;
+                padding: 1.5rem !important;
+            }
+        }
+
+        /* Small Mobile */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.75rem;
+            }
+
+            .navbar {
+                padding: 0.75rem;
+            }
+
+            .logo {
+                font-size: 1rem;
+            }
+
+            /* Stats Cards - 1 column on small mobile */
+            .grid[style*="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Buttons */
+            .btn {
+                padding: 0.65rem 0.85rem;
+                font-size: 0.9rem;
+            }
+
+            /* Cards */
+            .card {
+                padding: 0.85rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+            }
+
+            h3 {
+                font-size: 1.1rem;
+            }
+
+            /* Tables - Horizontal Scroll */
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 600px;
+            }
+
+            /* QR Code */
+            #qrcode {
+                width: 200px !important;
+                height: 200px !important;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            /* Larger touch targets */
+            .btn, .nav-link, button, a {
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Remove hover effects on touch devices */
+            .btn:hover, .nav-link:hover, .card:hover {
+                transform: none;
+            }
+
+            /* Add active states instead */
+            .btn:active {
+                transform: scale(0.98);
+                opacity: 0.8;
+            }
         }
 
         /* Utilities */
@@ -216,7 +424,15 @@
             </svg>
             Presensi BPS
         </a>
-        <div class="nav-links">
+        
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+        
+        <div class="nav-links" id="navLinks">
             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
             @if(in_array(1, session('roles', [])) || Auth::user()->username == 'admin')
                 <a href="{{ route('admin.sessions.index') }}" class="nav-link {{ request()->routeIs('admin.sessions.*') ? 'active' : '' }}">Kegiatan</a>
@@ -252,5 +468,35 @@
     </main>
 
     @stack('scripts')
+    
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navLinks = document.getElementById('navLinks');
+            const menuToggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (navLinks && menuToggle) {
+                if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+                    navLinks.classList.remove('active');
+                }
+            }
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.getElementById('navLinks');
+                if (navLinks) {
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

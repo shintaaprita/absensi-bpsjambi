@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\SessionController;
 use App\Http\Controllers\Admin\ScanQRController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Employee\ScanQRController as EmployeeScanQRController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,9 +29,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('sessions', SessionController::class);
         Route::get('scan-qr', [ScanQRController::class, 'index'])->name('scan-qr');
         Route::get('show-qr/{sessionId?}', [ScanQRController::class, 'showQR'])->name('show-qr');
-        Route::get('reports', function() {
-            return "Report view coming soon - placeholder";
-        })->name('reports');
+        Route::get('reports', [ReportController::class, 'index'])->name('reports');
     });
 
     // Employee Routes
