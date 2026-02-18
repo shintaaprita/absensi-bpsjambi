@@ -35,11 +35,18 @@ class DashboardController extends Controller
         // Total sessions
         $totalSessions = AttendanceSession::count();
 
-        // Active sessions
+        // Active sessions (currently happening)
         $activeSessions = AttendanceSession::where('start_time', '<=', $now)
             ->where('end_time', '>=', $now)
             ->withCount('attendances')
             ->orderBy('start_time', 'asc')
+            ->get();
+
+        // Today's sessions (all sessions today, including past and upcoming)
+        $todaySessions = AttendanceSession::whereDate('start_time', Carbon::today())
+            ->orWhereDate('end_time', Carbon::today())
+            ->withCount('attendances')
+            ->orderBy('start_time', 'desc')
             ->get();
 
         // Today's attendances count
@@ -61,6 +68,7 @@ class DashboardController extends Controller
             'totalUsers',
             'totalSessions',
             'activeSessions',
+            'todaySessions',
             'todayAttendances',
             'monthlyAttendances',
             'recentAttendances'

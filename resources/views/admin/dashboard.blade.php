@@ -128,6 +128,70 @@
                 </div>
             @endif
 
+            <!-- Today's All Sessions -->
+            <h3 style="margin: 2.5rem 0 1.5rem 0; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                <svg style="width: 24px; height: 24px; color: var(--secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Kegiatan Hari Ini
+            </h3>
+            
+            @if($todaySessions->isEmpty())
+                <div class="card" style="text-align: center; color: var(--text-muted); padding: 3rem;">
+                    <svg style="width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.3;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <p style="font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem;">Tidak ada kegiatan hari ini</p>
+                    <p style="font-size: 0.9rem;">Buat kegiatan baru untuk hari ini</p>
+                </div>
+            @else
+                <div class="grid" style="grid-template-columns: 1fr; gap: 1rem;">
+                    @foreach($todaySessions as $session)
+                        @php
+                            $now = \Carbon\Carbon::now();
+                            $isActive = $session->start_time <= $now && $session->end_time >= $now;
+                            $isPast = $session->end_time < $now;
+                            $isUpcoming = $session->start_time > $now;
+                        @endphp
+                        <div class="card" style="border-left: 4px solid {{ $isActive ? 'var(--primary)' : ($isPast ? '#9ca3af' : '#f59e0b') }};">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        @if($isActive)
+                                            <span style="background: var(--primary); color: white; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">AKTIF</span>
+                                        @elseif($isPast)
+                                            <span style="background: #e5e7eb; color: #6b7280; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">SELESAI</span>
+                                        @else
+                                            <span style="background: #fef3c7; color: #92400e; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">AKAN DATANG</span>
+                                        @endif
+                                        <h4 style="font-size: 1.1rem; font-weight: 600;">{{ $session->title }}</h4>
+                                    </div>
+                                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                                        <svg style="width: 14px; height: 14px; display: inline; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        {{ $session->start_time->format('H:i') }} - {{ $session->end_time->format('H:i') }}
+                                    </p>
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <span style="font-size: 0.85rem; color: var(--text-muted);">Metode:</span>
+                                        @if($session->method == 'location') 
+                                            <span style="background: #dbeafe; color: #1e40af; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">📍 Submit Location</span>
+                                        @elseif($session->method == 'share_qr') 
+                                            <span style="background: #fef3c7; color: #92400e; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">📱 Scan Admin QR</span>
+                                        @elseif($session->method == 'scan_qr') 
+                                            <span style="background: #dcfce7; color: #166534; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">🔍 Show User QR</span>
+                                        @endif
+                                        <span style="background: #f3f4f6; color: #374151; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-left: auto;">
+                                            {{ $session->attendances_count ?? 0 }} presensi
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
             <!-- Quick Actions -->
             <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem;">
                 <a href="{{ route('admin.scan-qr') }}" class="card" style="text-decoration: none; text-align: center; padding: 1.5rem; transition: all 0.2s; cursor: pointer; border: 2px solid var(--border);" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)';">
