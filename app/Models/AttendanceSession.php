@@ -10,6 +10,7 @@ class AttendanceSession extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'satker_code',
         'title',
         'description',
         'start_time',

@@ -75,6 +75,60 @@ class AttendanceController extends Controller
         return redirect()->route('dashboard')->with('success', 'Presence recorded via QR scan!');
     }
 
+    private function extractNip($token)
+    {
+        // If it's a URL, extract the last segment
+        if (filter_var($token, FILTER_VALIDATE_URL)) {
+            $path = parse_url($token, PHP_URL_PATH);
+            $segments = explode('/', trim($path, '/'));
+            return end($segments);
+        }
+
+        return $token;
+    }
+
+    private function resolveUserFromBadgeUrl($url)
+    {
+        $badgeId = $this->extractNip($url);
+        
+        // 1. Check if we already mapped this badge_id
+        $user = \App\Models\User::where('badge_id', $badgeId)->first();
+        if ($user) return $user;
+
+        // 2. Scrape the badge site
+        try {
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            ])->get($url);
+
+            if ($response->successful()) {
+                $html = $response->body();
+                
+                // Extract Fullname (usually in a bold div/h4)
+                // Based on standard BPS badge structure
+                preg_match('/<div style="font-size: 20px; font-weight: bold;[^>]*>(.*?)<\/div>/s', $html, $nameMatch);
+                $fullname = isset($nameMatch[1]) ? trim($nameMatch[1]) : null;
+
+                if ($fullname) {
+                    // Search user by name in our database
+                    $user = \App\Models\User::where('fullname', 'LIKE', '%' . $fullname . '%')
+                        ->orWhere('name', 'LIKE', '%' . $fullname . '%')
+                        ->first();
+
+                    if ($user) {
+                        // Map this badge_id for future scans
+                        $user->update(['badge_id' => $badgeId]);
+                        return $user;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Badge scraping failed: ' . $e->getMessage());
+        }
+
+        return null;
+    }
+
     /**
      * Method 3: Scan User's QR (Admin scans Employee's QR)
      * Admin submits the User's NIP/ID.
@@ -99,11 +153,22 @@ class AttendanceController extends Controller
             return response()->json(['success' => false, 'message' => 'Metode presensi tidak sesuai.']);
         }
         
-        // Find user by token (simplified: assuming token is nip_lama for now)
-        $user = \App\Models\User::where('nip_lama', $request->user_token)->first();
+        // Find user by token
+        $userToken = $request->user_token;
+        $user = null;
+
+        if (filter_var($userToken, FILTER_VALIDATE_URL) && strpos($userToken, 'badgebps.web.bps.go.id') !== false) {
+            $user = $this->resolveUserFromBadgeUrl($userToken);
+        } else {
+            $userToken = $this->extractNip($userToken);
+            $user = \App\Models\User::where('nip_lama', $userToken)
+                ->orWhere('nip_baru', $userToken)
+                ->orWhere('badge_id', $userToken)
+                ->first();
+        }
 
         if (!$user) {
-            return response()->json(['success' => false, 'message' => 'Pegawai tidak ditemukan. NIP: ' . $request->user_token]);
+            return response()->json(['success' => false, 'message' => 'Pegawai tidak ditemukan atau tidak dapat divalidasi dari Badge BPS.']);
         }
 
         // Check if already recorded

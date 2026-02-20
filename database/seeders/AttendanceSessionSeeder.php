@@ -19,6 +19,7 @@ class AttendanceSessionSeeder extends Seeder
 
         // 1. All-day session with scan_qr method (ACTIVE NOW - whole day)
         AttendanceSession::create([
+            'satker_code' => '1500',
             'title' => 'Presensi Harian Pegawai',
             'description' => 'Presensi harian untuk semua pegawai BPS Jambi',
             'start_time' => Carbon::today()->setTime(6, 0, 0),
@@ -29,6 +30,7 @@ class AttendanceSessionSeeder extends Seeder
 
         // 2. Current active session (from 1 hour ago to 2 hours from now)
         AttendanceSession::create([
+            'satker_code' => '1500',
             'title' => 'Rapat Koordinasi Tim',
             'description' => 'Rapat koordinasi tim bulanan',
             'start_time' => $now->copy()->subHour(),
@@ -39,6 +41,7 @@ class AttendanceSessionSeeder extends Seeder
 
         // 3. Location-based session (active now)
         AttendanceSession::create([
+            'satker_code' => '1500',
             'title' => 'Survei Lapangan',
             'description' => 'Kegiatan survei di lapangan',
             'start_time' => $now->copy()->subMinutes(30),
@@ -53,6 +56,7 @@ class AttendanceSessionSeeder extends Seeder
 
         // 4. Share QR method (active now)
         AttendanceSession::create([
+            'satker_code' => '1500',
             'title' => 'Pelatihan Internal',
             'description' => 'Pelatihan penggunaan aplikasi statistik',
             'start_time' => $now->copy()->subMinutes(15),
@@ -63,6 +67,7 @@ class AttendanceSessionSeeder extends Seeder
 
         // 5. Upcoming session (1 hour from now)
         AttendanceSession::create([
+            'satker_code' => '1500',
             'title' => 'Apel Sore',
             'description' => 'Apel sore evaluasi harian',
             'start_time' => $now->copy()->addHour(),
@@ -73,6 +78,7 @@ class AttendanceSessionSeeder extends Seeder
 
         // 6. Tomorrow's morning session
         AttendanceSession::create([
+            'satker_code' => '1500',
             'title' => 'Apel Pagi Besok',
             'description' => 'Apel pagi untuk hari besok',
             'start_time' => Carbon::tomorrow()->setTime(7, 0, 0),

@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Satker extends Model
+class Holiday extends Model
 {
     protected $fillable = [
-        'code',
-        'name',
-        'email',
+        'holiday_date',
+        'description',
     ];
 }

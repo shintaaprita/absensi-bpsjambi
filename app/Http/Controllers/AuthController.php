@@ -20,11 +20,21 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'username' => ['required'],
+            'username' => ['required'], // Can be username or NIP Lama
             'password' => ['required'],
         ]);
 
-        $user = User::where('username', $credentials['username'])->first();
+        // Prioritize finding by username, then by nip_lama
+        $user = User::where('username', $credentials['username'])
+            ->orWhere('nip_lama', $credentials['username'])
+            ->first();
+
+        // If user is Employee (Pegawai), verify username IS NIP Lama
+        if ($user && $user->roles()->whereRaw('LOWER(name) = ?', ['pegawai'])->exists()) {
+             if ($user->nip_lama !== $credentials['username'] && $user->username !== $credentials['username']) {
+                  return back()->withErrors(['username' => 'Pegawai harus login menggunakan Username atau NIP.'])->onlyInput('username');
+             }
+        }
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
             if (!$user->is_active) {
@@ -32,12 +42,14 @@ class AuthController extends Controller
             }
 
             Auth::login($user);
+            $this->setSessionRoles($user);
+            
             $request->session()->regenerate();
             return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
+            'username' => 'Identitas atau kata sandi salah.',
         ])->onlyInput('username');
     }
 
@@ -53,9 +65,29 @@ class AuthController extends Controller
         $validationResult = $this->validateToken($token);
 
         if ($validationResult && isset($validationResult['status']) && $validationResult['status'] == 200) {
-            $this->loginUserSSO($validationResult['user']);
+            $ssoUser = $validationResult['user'];
+            $user = $this->loginUserSSO($ssoUser);
+
+            // Authenticate the user in Laravel
+            Auth::login($user);
+            // Regenerate FIRST, then set session so data is not wiped
+            $request->session()->regenerate();
+
+            // Now set session roles (after regenerate so they persist)
+            $this->setSessionRoles(
+                $user,
+                $ssoUser['nip_lama_user'] ?? $user->nip_lama,
+                $ssoUser['fullname'] ?? $user->fullname,
+                $ssoUser['satker_kd'] ?? $user->satker_kd
+            );
+
+            \Illuminate\Support\Facades\Log::info('SSO Login Success', ['user' => $user->username]);
             return redirect()->to('/dashboard');
         } else {
+            \Illuminate\Support\Facades\Log::error('SSO Login Failed', [
+                'token' => $token,
+                'validationResult' => $validationResult
+            ]);
             return redirect()->route('login')->with('error', 'SSO Login Failed');
         }
     }
@@ -85,43 +117,84 @@ class AuthController extends Controller
 
     private function loginUserSSO($userData)
     {
-        $user = User::where('nip_lama', $userData['nip_lama_user'])->first();
+        $user = User::where('nip_lama', $userData['nip_lama_user'])
+            ->orWhere('username', $userData['username'])
+            ->first();
+
+        // Check for 'pegawai' and 'magang' roles
+        $pegawaiRole = Role::whereRaw('LOWER(name) = ?', ['pegawai'])->first();
+        $magangRole  = Role::whereRaw('LOWER(name) = ?', ['magang'])->first();
+
+        // Determine base role from NIP presence
+        $hasNip = !empty($userData['nip_lama_user'])
+            && $userData['nip_lama_user'] !== '-'
+            && is_numeric($userData['nip_lama_user']);
+
+        $baseRole = $hasNip ? $pegawaiRole : $magangRole;
 
         if (!$user) {
-            // Default role ID 4 in CI code was "Employee"
-            // In my seeder it might be different, but I'll use Role Name
-            $employeeRole = Role::where('name', 'Employee')->first();
-
+            // Brand new user — create with base role
             $user = User::create([
-                'name' => $userData['fullname'], // Tambahkan ini untuk memperbaiki error 'name' no default value
-                'username' => $userData['username'],
-                'email' => $userData['email'],
-                'nip_lama' => $userData['nip_lama_user'],
-                'fullname' => $userData['fullname'],
-                'satker_kd' => $userData['satker_kd'],
-                'is_active' => true,
-                'password' => Hash::make(str()->random(24)), // Random password for SSO users
+                'name'          => $userData['fullname'],
+                'username'      => $userData['username'],
+                'fullname'      => $userData['fullname'],
+                'email'         => $userData['email'],
+                'nip_lama'      => $userData['nip_lama_user'],
+                'nip_baru'      => $userData['nip_baru'] ?? null,
+                'satker_kd'     => $userData['satker_kd'],
+                'jabatan'       => $userData['fungsional'] ?? $userData['jabatan'] ?? null,
+                'is_active'     => $userData['is_active'] === 'Y',
+                'profile_photo' => $userData['image'] ?? null,
+                'roles_json'    => null, // roles_json is set by system, not SSO
+                'password'      => Hash::make(str()->random(24)),
             ]);
 
-            if ($employeeRole) {
-                $user->roles()->attach($employeeRole);
+            // Attach base role for new users
+            if ($baseRole) {
+                $user->roles()->attach($baseRole->id);
             }
+        } else {
+            // Update existing user with latest SSO profile data only
+            // Do NOT overwrite roles_json — it is managed by the system
+            $user->update([
+                'name'          => $userData['fullname'],
+                'fullname'      => $userData['fullname'],
+                'email'         => $userData['email'],
+                'nip_baru'      => $userData['nip_baru'] ?? $user->nip_baru,
+                'satker_kd'     => $userData['satker_kd'],
+                'jabatan'       => $userData['fungsional'] ?? $userData['jabatan'] ?? $user->jabatan,
+                'is_active'     => $userData['is_active'] === 'Y',
+                'profile_photo' => $userData['image'] ?? $user->profile_photo,
+            ]);
+
+            // If user somehow has NO roles, assign base role as fallback
+            $user->load('roles');
+            if ($user->roles->isEmpty() && $baseRole) {
+                $user->roles()->attach($baseRole->id);
+            }
+            // NOTE: We intentionally do NOT overwrite manually-assigned roles
+            // Admins can use `php artisan user:assign-roles` to manage roles
         }
 
-        // Set roles in session for switchRole logic (as per CI snippet)
+        // Return user (session will be set in ssoCallback after regenerate)
+        return $user;
+    }
+
+    private function setSessionRoles(User $user, $nip = null, $fullname = null, $satker = null)
+    {
+        $user->load('roles');
         $roles = $user->roles->pluck('id')->toArray();
         $roleNames = $user->roles->pluck('name', 'id')->toArray();
-
-        Auth::login($user);
+        $firstRoleId = $roles[0] ?? null;
 
         Session::put([
             'roles' => $roles,
             'role_names' => $roleNames,
-            'role' => $roles[0] ?? null,
-            'role_name' => $roleNames[$roles[0]] ?? null,
-            'nip_lama' => $userData['nip_lama_user'],
-            'fullname' => $userData['fullname'],
-            'satker_kd' => $userData['satker_kd'],
+            'role' => $firstRoleId,
+            'role_name' => $firstRoleId ? ($roleNames[$firstRoleId] ?? null) : null,
+            'nip_lama' => $nip ?? $user->nip_lama,
+            'fullname' => $fullname ?? $user->fullname,
+            'satker_kd' => $satker ?? $user->satker_kd,
         ]);
     }
 

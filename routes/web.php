@@ -14,15 +14,21 @@ Route::get('/', function () {
 });
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/p/{nip}', [\App\Http\Controllers\PublicProfileController::class, 'show'])->name('public.profile');
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/auth/sso', [AuthController::class, 'ssoLogin'])->name('auth.sso');
 Route::get('/auth/ssoCallback', [AuthController::class, 'ssoCallback'])->name('auth.ssoCallback');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::any('/logout', [AuthController::class, 'logout'])->name('logout'); // Changed to any to support GET logout from SSO redirect
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/switch-role/{role}', [AuthController::class, 'switchRole'])->name('switch-role');
+    
+    // Profile Routes
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profile/update-photo', [\App\Http\Controllers\ProfileController::class, 'updatePhoto'])->name('profile.update-photo');
+
 
     // Admin Routes
     Route::prefix('admin')->name('admin.')->group(function () {

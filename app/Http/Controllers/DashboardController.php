@@ -15,14 +15,15 @@ class DashboardController extends Controller
         $user = Auth::user();
         $now = Carbon::now();
         
-        // Check if user is admin
-        $isAdmin = in_array(1, session('roles', [])) || $user->username == 'admin';
+        // Check if current active role is admin or operator
+        $currentRole = session('role_name');
+        $isAdmin = in_array(strtolower($currentRole), ['admin', 'operator']) || $user->username == 'admin';
         
         if ($isAdmin) {
-            // Admin Dashboard
+            // Admin/Operator Dashboard
             return $this->adminDashboard($now);
         } else {
-            // Employee Dashboard
+            // Employee/Magang Dashboard
             return $this->employeeDashboard($now);
         }
     }

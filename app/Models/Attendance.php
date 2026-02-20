@@ -16,11 +16,14 @@ class Attendance extends Model
         'lat',
         'lng',
         'method_used',
+        'photo_path',
+        'is_wfa_at_time',
         'captured_at',
     ];
 
     protected $casts = [
         'captured_at' => 'datetime',
+        'is_wfa_at_time' => 'boolean',
     ];
 
     public function user()
