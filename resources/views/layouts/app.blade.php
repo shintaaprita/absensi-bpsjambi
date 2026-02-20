@@ -436,9 +436,10 @@
             <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
             @if(in_array(1, session('roles', [])) || Auth::user()->username == 'admin')
                 <a href="{{ route('admin.sessions.index') }}" class="nav-link {{ request()->routeIs('admin.sessions.*') ? 'active' : '' }}">Kegiatan</a>
+                <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">Anggota</a>
                 <a href="{{ route('admin.scan-qr') }}" class="nav-link {{ request()->routeIs('admin.scan-qr') ? 'active' : '' }}">Scan QR</a>
                 <a href="{{ route('admin.show-qr') }}" class="nav-link {{ request()->routeIs('admin.show-qr') ? 'active' : '' }}">Show QR</a>
-                <a href="{{ route('admin.reports') }}" class="nav-link">Laporan</a>
+                <a href="{{ route('admin.reports') }}" class="nav-link {{ request()->routeIs('admin.reports') ? 'active' : '' }}">Laporan</a>
             @endif
             <div class="flex items-center gap-4">
                 <span style="font-size: 0.85rem; color: var(--text-muted)">Hi, {{ Auth::user()->name }}</span>

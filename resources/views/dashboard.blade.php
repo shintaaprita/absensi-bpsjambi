@@ -110,11 +110,11 @@
                                         </button>
                                     @elseif($session->method == 'share_qr')
                                         <a href="{{ route('employee.scan-qr') }}" class="btn btn-primary">
-                                            📱 Scan QR
+                                            🔍 Tunjukkan QR
                                         </a>
                                     @elseif($session->method == 'scan_qr')
                                         <button class="btn btn-primary" onclick="showMyQR('{{ Auth::user()->nip_lama }}')">
-                                            🔍 Tunjukkan QR
+                                            📱 Scan QR
                                         </button>
                                     @endif
                                 </div>

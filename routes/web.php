@@ -30,6 +30,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('scan-qr', [ScanQRController::class, 'index'])->name('scan-qr');
         Route::get('show-qr/{sessionId?}', [ScanQRController::class, 'showQR'])->name('show-qr');
         Route::get('reports', [ReportController::class, 'index'])->name('reports');
+
+        // User Management
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+        Route::get('users-import', [\App\Http\Controllers\Admin\UserController::class, 'importForm'])->name('users.import.form');
+        Route::post('users-import', [\App\Http\Controllers\Admin\UserController::class, 'import'])->name('users.import');
+        Route::get('users-template', [\App\Http\Controllers\Admin\UserController::class, 'downloadTemplate'])->name('users.template');
     });
 
     // Employee Routes

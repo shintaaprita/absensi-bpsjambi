@@ -74,6 +74,58 @@
         </div>
     </div>
 
+    <!-- Quick Actions - dipindah ke atas agar langsung terlihat -->
+    <div style="margin-bottom: 2.5rem;">
+        <h3 style="margin-bottom: 1.25rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+            <svg style="width: 22px; height: 22px; color: var(--primary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            Aksi Cepat
+        </h3>
+        <div class="grid" style="grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+            <a href="{{ route('admin.scan-qr') }}" class="card" style="text-decoration: none; text-align: center; padding: 1.5rem; transition: all 0.2s; cursor: pointer; border: 2px solid var(--border);" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)';">
+                <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
+                    <svg style="width: 26px; height: 26px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
+                    </svg>
+                </div>
+                <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Scan QR</h4>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Scan QR pegawai</p>
+            </a>
+
+            <a href="{{ route('admin.show-qr') }}" class="card" style="text-decoration: none; text-align: center; padding: 1.5rem; transition: all 0.2s; cursor: pointer; border: 2px solid var(--border);" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)';">
+                <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
+                    <svg style="width: 26px; height: 26px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                </div>
+                <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Show QR</h4>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Tampilkan QR kegiatan</p>
+            </a>
+
+            <a href="{{ route('admin.sessions.create') }}" class="card" style="text-decoration: none; text-align: center; padding: 1.5rem; transition: all 0.2s; cursor: pointer; border: 2px solid var(--border);" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)';">
+                <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
+                    <svg style="width: 26px; height: 26px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+                <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Buat Kegiatan</h4>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Kegiatan baru</p>
+            </a>
+
+            <a href="{{ route('admin.users.index') }}" class="card" style="text-decoration: none; text-align: center; padding: 1.5rem; transition: all 0.2s; cursor: pointer; border: 2px solid var(--border);" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)';">
+                <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
+                    <svg style="width: 26px; height: 26px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </div>
+                <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Kelola Anggota</h4>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Data pegawai</p>
+            </a>
+        </div>
+    </div>
+
     <div class="grid" style="grid-template-columns: 1.5fr 1fr; gap: 2rem;">
         <!-- Active Sessions -->
         <section>
@@ -128,104 +180,8 @@
                 </div>
             @endif
 
-            <!-- Today's All Sessions -->
-            <h3 style="margin: 2.5rem 0 1.5rem 0; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-                <svg style="width: 24px; height: 24px; color: var(--secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                Kegiatan Hari Ini
-            </h3>
-            
-            @if($todaySessions->isEmpty())
-                <div class="card" style="text-align: center; color: var(--text-muted); padding: 3rem;">
-                    <svg style="width: 64px; height: 64px; margin: 0 auto 1rem; opacity: 0.3;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                    <p style="font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem;">Tidak ada kegiatan hari ini</p>
-                    <p style="font-size: 0.9rem;">Buat kegiatan baru untuk hari ini</p>
-                </div>
-            @else
-                <div class="grid" style="grid-template-columns: 1fr; gap: 1rem;">
-                    @foreach($todaySessions as $session)
-                        @php
-                            $now = \Carbon\Carbon::now();
-                            $isActive = $session->start_time <= $now && $session->end_time >= $now;
-                            $isPast = $session->end_time < $now;
-                            $isUpcoming = $session->start_time > $now;
-                        @endphp
-                        <div class="card" style="border-left: 4px solid {{ $isActive ? 'var(--primary)' : ($isPast ? '#9ca3af' : '#f59e0b') }};">
-                            <div style="display: flex; justify-content: space-between; align-items: start;">
-                                <div style="flex: 1;">
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                        @if($isActive)
-                                            <span style="background: var(--primary); color: white; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">AKTIF</span>
-                                        @elseif($isPast)
-                                            <span style="background: #e5e7eb; color: #6b7280; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">SELESAI</span>
-                                        @else
-                                            <span style="background: #fef3c7; color: #92400e; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;">AKAN DATANG</span>
-                                        @endif
-                                        <h4 style="font-size: 1.1rem; font-weight: 600;">{{ $session->title }}</h4>
-                                    </div>
-                                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-                                        <svg style="width: 14px; height: 14px; display: inline; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        {{ $session->start_time->format('H:i') }} - {{ $session->end_time->format('H:i') }}
-                                    </p>
-                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
-                                        <span style="font-size: 0.85rem; color: var(--text-muted);">Metode:</span>
-                                        @if($session->method == 'location') 
-                                            <span style="background: #dbeafe; color: #1e40af; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">📍 Submit Location</span>
-                                        @elseif($session->method == 'share_qr') 
-                                            <span style="background: #fef3c7; color: #92400e; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">📱 Scan Admin QR</span>
-                                        @elseif($session->method == 'scan_qr') 
-                                            <span style="background: #dcfce7; color: #166534; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">🔍 Show User QR</span>
-                                        @endif
-                                        <span style="background: #f3f4f6; color: #374151; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-left: auto;">
-                                            {{ $session->attendances_count ?? 0 }} presensi
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-
-            <!-- Quick Actions -->
-            <div class="grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem;">
-                <a href="{{ route('admin.scan-qr') }}" class="card" style="text-decoration: none; text-align: center; padding: 1.5rem; transition: all 0.2s; cursor: pointer; border: 2px solid var(--border);" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)';">
-                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
-                        <svg style="width: 24px; height: 24px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
-                        </svg>
-                    </div>
-                    <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Scan QR</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Scan QR pegawai</p>
-                </a>
-
-                <a href="{{ route('admin.show-qr') }}" class="card" style="text-decoration: none; text-align: center; padding: 1.5rem; transition: all 0.2s; cursor: pointer; border: 2px solid var(--border);" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)';">
-                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
-                        <svg style="width: 24px; height: 24px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                    </div>
-                    <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Show QR</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Tampilkan QR kegiatan</p>
-                </a>
-
-                <a href="{{ route('admin.sessions.create') }}" class="card" style="text-decoration: none; text-align: center; padding: 1.5rem; transition: all 0.2s; cursor: pointer; border: 2px solid var(--border);" onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)';">
-                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">
-                        <svg style="width: 24px; height: 24px; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                    </div>
-                    <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Buat Kegiatan</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Kegiatan baru</p>
-                </a>
-            </div>
         </section>
+
 
         <!-- Recent Attendances & Stats -->
         <section>

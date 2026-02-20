@@ -24,7 +24,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem; padding: 0.8rem;">
-                Login Admin
+                Login
             </button>
         </form>
 
@@ -41,9 +41,7 @@
             Login SSO SiCakep
         </a>
 
-        <div style="margin-top: 2rem; text-align: center;">
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Default Admin: <strong>admin</strong> / <strong>admin1500..</strong></p>
-        </div>
+
     </div>
 </div>
 @endsection
